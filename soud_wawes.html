@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Waves</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="lineCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('lineCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Generate parallel lines with random colors
+        const lines = [];
+        const lineSpacing = 20;
+        const lineWidth = 2;
+        const numLines = Math.floor(canvas.width / lineSpacing);
+
+        for (let i = 0; i < numLines; i++) {
+            lines.push({
+                x: i * lineSpacing,
+                y: canvas.height / 2,
+                amplitude: 50 + Math.random() * 50,
+                frequency: 0.02 + Math.random() * 0.02,
+                phase: Math.random() * Math.PI * 2,
+                color: getRandomColor()
+            });
+        }
+
+        // Function to generate a random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Draw lines function
+        function drawLines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            lines.forEach(line => {
+                line.phase += line.frequency;
+                const yOffset = Math.sin(line.phase) * line.amplitude;
+
+                ctx.beginPath();
+                ctx.moveTo(line.x, line.y - yOffset);
+                ctx.lineTo(line.x, line.y + yOffset);
+                ctx.strokeStyle = line.color;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(drawLines);
+        }
+
+        // Initialize drawing
+        drawLines();
+
+        // Add event listener for mouse movement
+        canvas.addEventListener('mousemove', (event) => {
+            // Adjust the amplitude of the lines based on mouse position
+            const mouseY = event.clientY;
+            lines.forEach(line => {
+                line.amplitude = Math.abs(line.y - mouseY);
+            });
+        });
+    </script>
+
+</body>
+</html>
