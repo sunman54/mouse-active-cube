@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+
+
+    #myCanvasContainer{
+      height: 600px; 
+      width: 600px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+
+<div id="myCanvasContainer" />
+
+<script>
+  function circles(id) {
+    let t = 1; // time variable
+
+    function sketch(p) {
+      let canvas;
+
+      p.setup = function() {
+        const container = document.getElementById(id);
+        const canvasWidth = container.clientWidth;
+        const canvasHeight = container.clientHeight;
+        
+        canvas = p.createCanvas(canvasWidth, canvasHeight);
+        canvas.parent(id);
+        p.noStroke();
+        p.fill(25, 200, 210);
+      };
+
+      p.draw = function() {
+        p.background(10, 10);
+
+        for (let x = 0; x <= p.width; x = x + 30) {
+          for (let y = 0; y <= p.height; y = y + 30) {
+            const xAngle = p.map(p.mouseX, 0, p.width, -4 * p.PI, 4 * p.PI, true);
+            const yAngle = p.map(p.mouseY, 0, p.height, -4 * p.PI, 4 * p.PI, true);
+            const angle = xAngle * (x / p.width) + yAngle * (y / p.height);
+
+            const myX = x + 20 * p.cos(2 * p.PI * t + angle);
+            const myY = y + 20 * p.sin(2 * p.PI * t + angle);
+
+            p.ellipse(myX, myY, 10);
+          }
+        }
+
+        t = t + 0.006;
+      };
+    }
+
+    new p5(sketch, id);
+  }
+
+  // Call the function with the desired div ID
+  circles('myCanvasContainer');
+</script>
+
+</body>
+</html>
