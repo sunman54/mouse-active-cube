@@ -6,4 +6,4 @@
 
 
 - [Circles](https://sunman54.github.io/mouse-active-cube/circles)
-- [Waves](https://sunman54.github.io/mouse-active-cube/soud_wawes)https://sunman54.github.io/mouse-active-cube/soud_wawes
+- [Waves](https://sunman54.github.io/mouse-active-cube/soud_wawes)
