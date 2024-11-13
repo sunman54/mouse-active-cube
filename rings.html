@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Mouse Responsive Sphere with Glow Effect</title>
+  <style>
+    /* Container to center the 3D sphere */
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #000;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+
+    /* Main sphere container */
+    .sphere {
+      position: relative;
+      width: 450px;
+      height: 450px;
+      transform-style: preserve-3d;
+    }
+
+    /* Ring styling with glow effect */
+    .ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      opacity: 0.9;
+      /* Adding a soft glow around each ring */
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.8), 0 0 40px rgba(74, 144, 226, 0.5);
+      filter: blur(1px); /* Slight blur for smoother glow */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sphere" id="sphere"></div>
+  </div>
+
+  <script>
+    // Get the sphere container
+    const sphere = document.getElementById('sphere');
+    
+    // Number of rings
+    const numberOfRings = 25;
+
+    // Function to generate a random color
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    // Generate rings dynamically
+    for (let i = 0; i < numberOfRings; i++) {
+      const ring = document.createElement('div');
+      ring.classList.add('ring');
+      
+      // Set the rotation for each ring
+      const rotationAngle = i * (360 / numberOfRings); // Spread out evenly from 0 to 360 degrees
+      ring.style.transform = `rotateX(${rotationAngle}deg) rotateY(${rotationAngle}deg)`;
+      
+      // Set random color and increased thickness for each ring
+      const ringColor = getRandomColor();
+      ring.style.border = `3px solid ${ringColor}`; // Increase thickness to 3px
+      
+      // Set the glow color to match the ring color
+      ring.style.boxShadow = `0 0 20px ${ringColor}, 0 0 40px ${ringColor}`;
+      
+      // Append the ring to the sphere container
+      sphere.appendChild(ring);
+    }
+
+    // Initial rotation angles and speed
+    let baseRotationX = 0;
+    let baseRotationY = 0;
+    const rotationSpeed = 0.2; // Continuous rotation speed
+
+    // Variables to track mouse rotation offset
+    let mouseRotationX = 0;
+    let mouseRotationY = 0;
+
+    // Update rotation based on mouse movement
+    document.addEventListener('mousemove', (event) => {
+      // Calculate rotation based on mouse position
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const offsetX = (event.clientX - centerX) / centerX;
+      const offsetY = (event.clientY - centerY) / centerY;
+      
+      // Set mouse offset rotations
+      mouseRotationX = offsetY * 15; // Max 15 degrees for X axis
+      mouseRotationY = offsetX * 15; // Max 15 degrees for Y axis
+    });
+
+    // Animation loop for continuous rotation
+    function animate() {
+      // Update base rotation for continuous spinning
+      baseRotationX += rotationSpeed;
+      baseRotationY += rotationSpeed;
+
+      // Apply both base and mouse rotations to the sphere
+      sphere.style.transform = `rotateX(${baseRotationX + mouseRotationX}deg) rotateY(${baseRotationY + mouseRotationY}deg)`;
+      
+      // Request the next animation frame
+      requestAnimationFrame(animate);
+    }
+
+    // Start the animation
+    animate();
+  </script>
+</body>
+</html>
